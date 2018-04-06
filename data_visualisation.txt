@@ -1,0 +1,12 @@
+#data visualisation
+from sklearn.externals.six import StringIO
+import pydot
+dot_data = StringIO()
+tree.export_graphviz(clf,
+                    out_file=dot__data
+                    feature_names=feature_names_train
+                    class_names=mode_y_train
+                    filler=True, rounded=True
+                    impurity=False)
+graph = pydot.graph_from_dot_data(dot_data.getvalue())
+graph.write_pdf("mode.pdf")

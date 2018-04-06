@@ -1,0 +1,75 @@
+import csv
+import numpy as np
+with open('C:\\Users\\User\\Documents\\Final Year Project @ NTU\\NTU\\sample.csv','r') as csvfile:
+    mode_reader = csv.reader(csvfile, delimiter=',')
+    
+    
+    #Header contains feature names
+    row=next(mode_reader)
+    feature_names=np.array(row)
+    #print feature_names
+    
+    
+    #load dataset and target classes
+    mode_X,mode_y=[],[]
+    for row in mode_reader:
+        mode_X.append(row)
+        mode_y.append(row[8])
+    mode_X = np.array(mode_X)
+    mode_y = np.array(mode_y)
+    #print mode_X
+    #print mode_y[0]
+    
+    
+    #retain required columns
+    mode_X = mode_X[:, [0,1,6]]
+    feature_names = feature_names[[0,1,6]]
+    #print feature_names
+    #print mode_X
+    
+    
+    #encode mode
+    from sklearn.preprocessing import LabelEncoder
+    enc = LabelEncoder()
+    label_encoder = enc.fit(mode_y[:])
+    print("Categorical Classes:", label_encoder.classes_)
+    integer_classes = label_encoder.transform(label_encoder.classes_)
+    print("Integer Classes:", integer_classes)
+    t = label_encoder.transform(mode_y[:])
+    mode_y[:] = t
+    #print (mode_X[4], mode_y[4])
+    #mode_X_1 = mode_X.astype(np.float)
+    #print mode_X
+    #print mode_y
+    
+    
+    
+    #decision tree
+    from sklearn import tree
+    clf = tree.DecisionTreeClassifier(criterion='entropy', max_depth=3, min_samples_leaf=5)
+    clf = clf.fit(mode_X,mode_y) 
+    print clf
+    
+    
+    from sklearn import metrics
+    
+    def measure_performance(X,y,clf, show_accuracy=True, show_classification_report=True, show_confusion_matrix=True):
+        y_pred=clf.predict(X)
+        if show_accuracy:
+            print("Accuracy:{0:.3f}".format(metrics.accuracy_score(y,y_pred)),"\n")
+        if show_classification_report:
+            print("Classification Report")
+            print(metrics.classification_report(y,y_pred),"\n")
+        if show_confusion_matrix:
+            print("Confusion Matrix")
+            print(metrics.confusion_matrix(y,y_pred),"\n")
+    
+    measure_performance(mode_X,mode_y,clf, show_accuracy=True, show_classification_report=True, show_confusion_matrix=True)
+    
+    
+    #evaluating the performance of the decision tree on the testing data
+    clf_dt = tree.DecisionTreeClassifier(criterion='entropy', max_depth=3, min_samples_leaf=5)
+    clf_dt.fit(mode_X, mode_y)
+    measure_performance(mode_X, mode_y,clf_dt)
+   
+    
